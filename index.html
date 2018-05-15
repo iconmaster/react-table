@@ -3,18 +3,11 @@
 <script src="https://unpkg.com/react@15/dist/react.min.js"> </script><script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js">
 </script>
 <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
-
-      function Square(props) {
-        return (
-          <button className="square" onClick={props.onClick}>
-            {props.value}
-          </button>
-        );
-      }
 
       class Board extends React.Component {
         constructor(props) {
@@ -78,45 +71,65 @@
         }
       }
 
-      class Game extends React.Component {
+      function DataCell(props) {
+        return (
+          <button className="dataCell" onClick={props.onClick}>
+            {props.cellData}
+          </button>
+        );
+      }
+
+      function DataRow(props) {
+        return (
+          <div className="dataRow">
+            <DataCell cellData={props.rowData[0]} onClick={props.onClick} />
+            <DataCell cellData={props.rowData[1]} onClick={props.onClick} />
+            <DataCell cellData={props.rowData[2]} onClick={props.onClick} />
+          </div>
+        );
+      }
+
+      class DataTable extends React.Component {
+
+        constructor(props) {
+          super(props);
+          this.state = {
+            output: "not clicked",
+          };
+        }
+
+        handleClick() {
+            this.setState({
+              output: "clicked",
+            });
+        }
+
         render() {
           return (
-            <div className="game">
-              <div className="game-board">
-                <Board />
-              </div>
-              <div className="game-info">
-                <div>{/* status */}</div>
-                <ol>{/* TODO */}</ol>
-              </div>
+            <div className="table">
+              <DataRow rowData={this.props.source.data[0]} onClick={() => this.handleClick()} />
+              <DataRow rowData={this.props.source.data[1]} onClick={() => this.handleClick()} />
+              <DataRow rowData={this.props.source.data[2]} onClick={() => this.handleClick()} />
+              <div>{this.state.output}</div>
             </div>
           );
         }
       }
 
       // ========================================
-      function calculateWinner(squares) {
-        const lines = [
-          [0, 1, 2],
-          [3, 4, 5],
-          [6, 7, 8],
-          [0, 3, 6],
-          [1, 4, 7],
-          [2, 5, 8],
-          [0, 4, 8],
-          [2, 4, 6],
-        ];
-        for (let i = 0; i < lines.length; i++) {
-          const [a, b, c] = lines[i];
-          if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
-          }
-        }
-        return null;
-      }
+
+      const structuredData = {
+        xAxis: ["Spring 2018", "Q1 2018", "Mar 2018"],
+        yAxis: ["All Atr", "Fashion", "Basics"],
+        data: [
+          [36125000, 24565000, 9826000],
+          [23481250, 15967250, 6386900],
+          [12643750, 8597750, 3439100],
+        ],
+      };
 
       ReactDOM.render(
-        <Game />,
+        <DataTable source={structuredData} onClick={() => this.handleClick()} />,
         document.getElementById('root')
       );
 
