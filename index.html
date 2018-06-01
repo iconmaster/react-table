@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <script src="https://unpkg.com/react@15/dist/react.min.js"> </script><script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js">
@@ -11,19 +12,28 @@
 
       function DataCell(props) {
         return (
-          <button className="dataCell" onClick={props.onClick}>
+          <span className="data-cell" onClick={props.onClick}>
             {props.cellData}
-          </button>
+          </span>
         );
       }
 
       function DataRow(props) {
         return (
-          <div className="board-row">
+          <div className="data-row">
             {props.rowData.map((x, index)=> <DataCell key={x.id} cellData={props.rowData[index]} onClick={props.onClick} />)}
           </div>
         );
       }
+
+      function HeaderRow(props) {
+        return (
+          <div className="header-row">
+            {props.rowData.map((x, index)=> <DataCell key={x.id} cellData={props.rowData[index]} onClick={props.onClick} />)}
+          </div>
+        );
+      }
+
 
       class DataTable extends React.Component {
 
@@ -42,7 +52,8 @@
 
         render() {
           return (
-            <div className="table">
+            <div className="data-table">
+              <HeaderRow rowData={this.props.source.xAxis} onClick={() => this.handleClick()} />
               {this.props.source.data.map((x, index)=> <DataRow key={x.id} rowData={this.props.source.data[index]} onClick={() => this.handleClick()} />)}
               <div>{this.state.output}</div>
             </div>
@@ -57,6 +68,7 @@
           [36125000, 24565000, 9826000],
           [23481250, 15967250, 6386900],
           [12643750, 8597750, 3439100],
+          [36125000, 24565000, 9826000],
         ],
       };
 
