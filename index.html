@@ -9,73 +9,116 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
+    const structuredData = {
+      xAxis: ["Spring 2018", "Q1 2018", "Mar 2018"],
+      yAxis: ["All Atr", "Fashion", "Basics"],
+      data: [
+        [36125000, 24565000, 9826000],
+        [23481250, 15967250, 6386900],
+        [12643750, 8597750, 3439100],
+        [36125000, 24565000, 9826000]
+      ]
+    };
 
-      function DataCell(props) {
-        return (
-          <span className="data-cell" onClick={props.onClick}>
-            {props.cellData}
-          </span>
-        );
+    const DataCell = ({ cellData, onClick }) => (
+      <td className="data-cell" onClick={onClick}>
+        {cellData}
+      </td>
+    );
+
+    const DataRow = ({ rowData, handleClick }) => (
+      <tr className="data-row">
+        {rowData.map((row, index) => (
+          <DataCell key={index} cellData={row} onClick={handleClick(row)} />
+        ))}
+      </tr>
+    );
+
+    const HeaderRow = ({ rowData, handleHeaderClick }) => (
+      <tr className="header-row">
+        {rowData.map((row, index) => (
+          <DataCell key={index} cellData={row} onClick={handleHeaderClick(row)} />
+        ))}
+      </tr>
+    );
+
+    class DataTable extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          output: null
+        };
+
+        // We bind our non react api methods in constructor to prevent the
+        // need for opening up an anon function in our render function
+        // which is generally considered bad practice since the anon functions
+        // will be created everytime the component renders
+        this.handleHeaderClick = this.handleHeaderClick.bind(this);
+        this.handleClick = this.handleClick.bind(this);
       }
 
-      function DataRow(props) {
+      handleHeaderClick(data) {
+        // "e" is the click event, you don't really need access
+        //to this but I kept it here for example purposes
+        return e => {
+          console.log("handleHeaderClick");
+
+          this.setState({
+            output: data
+          });
+        };
+      }
+
+      handleClick(data) {
+        // "e" is the click event, you don't really need access
+        //to this but I kept it here for example purposes
+        return e => {
+          console.log("handleClick");
+
+          this.setState({
+            output: data
+          });
+        };
+      }
+
+      render() {
+        const { source } = this.props;
+        const { output } = this.state;
+
         return (
-          <div className="data-row">
-            {props.rowData.map((x, index)=> <DataCell key={x.id} cellData={props.rowData[index]} onClick={props.onClick} />)}
+          <div>
+            <table className="data-table">
+              <thead>
+                <HeaderRow
+                  rowData={source.xAxis}
+                  handleHeaderClick={this.handleHeaderClick}
+                />
+              </thead>
+              <tbody>
+                {source.data.map((row, index) => (
+                  <DataRow
+                    key={index}
+                    rowData={row}
+                    handleClick={this.handleClick}
+                  />
+                ))}
+              </tbody>
+            </table>
+
+            <br />
+            <h3>CLICKED DATA</h3>
+            <pre>{output}</pre>
           </div>
         );
       }
+    }
 
-      function HeaderRow(props) {
-        return (
-          <div className="header-row">
-            {props.rowData.map((x, index)=> <DataCell key={x.id} cellData={props.rowData[index]} onClick={props.onClick} />)}
-          </div>
-        );
-      }
+    ReactDOM.render(
+      <DataTable source={structuredData} />,
+      document.getElementById("root")
+    );
 
-
-      class DataTable extends React.Component {
-
-        constructor(props) {
-          super(props);
-          this.state = {
-            output: "not clicked",
-          };
-        }
-
-        handleClick() {
-            this.setState({
-              output: "clicked",
-            });
-        }
-
-        render() {
-          return (
-            <div className="data-table">
-              <HeaderRow rowData={this.props.source.xAxis} onClick={() => this.handleClick()} />
-              {this.props.source.data.map((x, index)=> <DataRow key={x.id} rowData={this.props.source.data[index]} onClick={() => this.handleClick()} />)}
-              <div>{this.state.output}</div>
-            </div>
-          );
-        }
-      }
-
-      const structuredData = {
-        xAxis: ["Spring 2018", "Q1 2018", "Mar 2018"],
-        yAxis: ["All Atr", "Fashion", "Basics"],
-        data: [
-          [36125000, 24565000, 9826000],
-          [23481250, 15967250, 6386900],
-          [12643750, 8597750, 3439100],
-          [36125000, 24565000, 9826000],
-        ],
-      };
-
-      ReactDOM.render(
-        <DataTable source={structuredData} onClick={() => this.handleClick()} />,
-        document.getElementById('root')
-      );
 
     </script>
 </body>
