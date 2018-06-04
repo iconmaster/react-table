@@ -28,16 +28,16 @@
 
     const DataRow = ({ rowData, handleClick }) => (
       <tr className="data-row">
-        {rowData.map((row, index) => (
-          <DataCell key={index} cellData={row} onClick={handleClick(row)} />
+        {rowData.map((cell, index) => (
+          <DataCell key={index} cellData={cell} onClick={handleClick(cell)} />
         ))}
       </tr>
     );
 
     const HeaderRow = ({ rowData, handleHeaderClick }) => (
       <tr className="header-row">
-        {rowData.map((row, index) => (
-          <DataCell key={index} cellData={row} onClick={handleHeaderClick(row)} />
+        {rowData.map((cell, index) => (
+          <DataCell key={index} cellData={cell} onClick={handleHeaderClick(cell)} />
         ))}
       </tr>
     );
@@ -53,14 +53,14 @@
         // We bind our non react api methods in constructor to prevent the
         // need for opening up an anon function in our render function
         // which is generally considered bad practice since the anon functions
-        // will be created everytime the component renders
+        // will be created every time the component renders
         this.handleHeaderClick = this.handleHeaderClick.bind(this);
         this.handleClick = this.handleClick.bind(this);
       }
 
       handleHeaderClick(data) {
         // "e" is the click event, you don't really need access
-        //to this but I kept it here for example purposes
+        // to this but I kept it here for example purposes
         return e => {
           console.log("handleHeaderClick");
 
@@ -72,7 +72,7 @@
 
       handleClick(data) {
         // "e" is the click event, you don't really need access
-        //to this but I kept it here for example purposes
+        // to this but I kept it here for example purposes
         return e => {
           console.log("handleClick");
 
