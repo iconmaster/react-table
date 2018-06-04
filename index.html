@@ -26,18 +26,26 @@
       </td>
     );
 
-    const DataRow = ({ rowData, handleClick }) => (
+    const HeaderCell = ({ cellData }) => (
+      <td className="header-cell">
+        {cellData}
+      </td>
+    );
+
+    const DataRow = ({ rowHeaderData, rowData, handleClick }) => (
       <tr className="data-row">
+        <HeaderCell cellData={rowHeaderData} />
         {rowData.map((cell, index) => (
           <DataCell key={index} cellData={cell} onClick={handleClick(cell)} />
         ))}
       </tr>
     );
 
-    const HeaderRow = ({ rowData, handleHeaderClick }) => (
+    const HeaderRow = ({ rowHeaderData, rowData }) => (
       <tr className="header-row">
+        <HeaderCell cellData={rowHeaderData} />
         {rowData.map((cell, index) => (
-          <DataCell key={index} cellData={cell} onClick={handleHeaderClick(cell)} />
+          <DataCell key={index} cellData={cell} />
         ))}
       </tr>
     );
@@ -92,13 +100,13 @@
               <thead>
                 <HeaderRow
                   rowData={source.xAxis}
-                  handleHeaderClick={this.handleHeaderClick}
                 />
               </thead>
               <tbody>
                 {source.data.map((row, index) => (
                   <DataRow
                     key={index}
+                    rowHeaderData={source.yAxis[index]}
                     rowData={row}
                     handleClick={this.handleClick}
                   />
